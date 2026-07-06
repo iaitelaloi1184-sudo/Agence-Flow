@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('logo')->nullable();
+            $table->string('secteur')->nullable();
             $table->json('reseaux_sociaux')->nullable();
             $table->string('ton_communication')->nullable();
             $table->string('email');
