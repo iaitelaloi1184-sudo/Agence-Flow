@@ -26,18 +26,18 @@
                         class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('dashboard') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-800' }}">
                         Dashboard
                     </a>
-                    <a href="#"
-                        class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800">
-                        Clients
-                    </a>
-                    <a href="#"
-                        class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800">
-                        Projets
-                    </a>
-                    <a href="#"
-                        class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-800">
-                        Tâches
-                    </a>
+                    <a href="{{ route('clients.index') }}"
+    class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('clients.*') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-800' }}">
+    Clients
+</a>
+<a href="{{ route('campaigns.index') }}"
+    class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('campaigns.*') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-800' }}">
+    Campagnes
+</a>
+<a href="{{ route('tasks.index') }}"
+    class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('tasks.*') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-800' }}">
+    Tâches
+</a>
                 </nav>
 
                 <div class="p-4 border-t border-gray-800">
