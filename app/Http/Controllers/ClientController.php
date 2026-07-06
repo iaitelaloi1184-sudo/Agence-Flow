@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Client;
 
 class ClientController extends Controller
 {
@@ -11,7 +12,8 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $clients = Client::all();
+        return view('clients.index' , compact('clients'));
     }
 
     /**
@@ -19,7 +21,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        return view('clients.create');
     }
 
     /**
@@ -27,15 +29,22 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+        'nom'   => 'required|string|max:255',
+        'email' => 'nullable|email',
+        ]);
+
+        Client::create($request->all());
+
+        return redirect()->route('clients.index')
+           ->with('success', 'Client ajouté avec succès !');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
+    public function show(Client $client){
+        return view('clients.show', compact('client'));
     }
 
     /**

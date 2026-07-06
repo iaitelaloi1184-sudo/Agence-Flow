@@ -28,3 +28,4 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('tasks', TaskController::class);
 
 });
+require __DIR__.'/auth.php';
