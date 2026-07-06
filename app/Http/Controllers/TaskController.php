@@ -77,4 +77,14 @@ class TaskController extends Controller
         Task::findOrFail($id)->delete();
         return redirect()->route('tasks.index')->with('success', 'Tâche supprimée !');
     }
+    public function updateStatus(Request $request, Task $task)
+    {
+        $request->validate([
+            'statut' => 'required|in:a_faire,en_cours,en_revision,termine',
+        ]);
+
+        $task->update(['statut' => $request->statut]);
+
+        return response()->json(['success' => true]);
+    }
 }

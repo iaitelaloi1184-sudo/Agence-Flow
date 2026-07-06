@@ -5,7 +5,17 @@
         </h2>
     </x-slot>
 
-    <div class="space-y-4">
+    <div class="space-y-4" x-data="{
+        search: '',
+        campaigns: {{ $campaigns->map(fn($c) => [
+            'id' => $c->id,
+            'nom' => $c->nom,
+            'client' => $c->client->nom ?? '—',
+            'periode' => $c->date_debut->format('d/m/Y') . ' → ' . $c->date_fin->format('d/m/Y'),
+            'statut' => $c->statut,
+            'url' => route('campaigns.show', $c),
+        ])->toJson() }}
+    }">
 
         @if (session('success'))
             <div class="bg-green-50 text-green-700 text-sm px-4 py-3 rounded-lg">
@@ -13,13 +23,17 @@
             </div>
         @endif
 
-        <div class="flex items-center justify-between">
-            <h3 class="text-sm text-gray-500">{{ $campaigns->count() }} campagne(s)</h3>
+        <div class="flex items-center justify-between gap-4">
+            <input type="text" x-model="search" placeholder="Rechercher une campagne ou un client..."
+                class="w-full max-w-xs px-4 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600">
+
             <a href="{{ route('campaigns.create') }}"
-               class="bg-gray-900 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+               class="shrink-0 bg-gray-900 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
                 + Nouvelle campagne
             </a>
         </div>
+
+        <p class="text-sm text-gray-500" x-text="campaigns.filter(c => c.nom.toLowerCase().includes(search.toLowerCase()) || c.client.toLowerCase().includes(search.toLowerCase())).length + ' campagne(s)'"></p>
 
         <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
             <table class="w-full text-sm">
@@ -33,30 +47,29 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @forelse ($campaigns as $campaign)
+                    <template x-for="campaign in campaigns.filter(c => c.nom.toLowerCase().includes(search.toLowerCase()) || c.client.toLowerCase().includes(search.toLowerCase()))" :key="campaign.id">
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium text-gray-900">{{ $campaign->nom }}</td>
-                            <td class="px-6 py-4 text-gray-500">{{ $campaign->client->nom ?? '—' }}</td>
-                            <td class="px-6 py-4 text-gray-500">
-                                {{ $campaign->date_debut->format('d/m/Y') }} → {{ $campaign->date_fin->format('d/m/Y') }}
-                            </td>
+                            <td class="px-6 py-4 font-medium text-gray-900" x-text="campaign.nom"></td>
+                            <td class="px-6 py-4 text-gray-500" x-text="campaign.client"></td>
+                            <td class="px-6 py-4 text-gray-500" x-text="campaign.periode"></td>
                             <td class="px-6 py-4">
-                                <span class="text-xs font-medium px-2.5 py-1 rounded-full
-                                    @if($campaign->statut === 'en_cours') bg-blue-100 text-blue-700
-                                    @elseif($campaign->statut === 'termine') bg-gray-100 text-gray-600
-                                    @else bg-yellow-100 text-yellow-700 @endif">
-                                    {{ $campaign->statut }}
-                                </span>
+                                <span class="text-xs font-medium px-2.5 py-1 rounded-full"
+                                    :class="{
+                                        'bg-blue-100 text-blue-700': campaign.statut === 'en_cours',
+                                        'bg-gray-100 text-gray-600': campaign.statut === 'termine',
+                                        'bg-yellow-100 text-yellow-700': campaign.statut === 'pause'
+                                    }"
+                                    x-text="campaign.statut"></span>
                             </td>
                             <td class="px-6 py-4 text-right">
-                                <a href="{{ route('campaigns.show', $campaign) }}" class="text-red-600 hover:underline text-sm">Voir</a>
+                                <a :href="campaign.url" class="text-red-600 hover:underline text-sm">Voir</a>
                             </td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-8 text-center text-gray-400">Aucune campagne pour le moment</td>
-                        </tr>
-                    @endforelse
+                    </template>
+
+                    <tr x-show="campaigns.filter(c => c.nom.toLowerCase().includes(search.toLowerCase()) || c.client.toLowerCase().includes(search.toLowerCase())).length === 0">
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-400">Aucun résultat pour cette recherche</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
