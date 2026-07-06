@@ -15,7 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call([
+          UserSeeder::class,  // doit être en premier (référencé par Task, Comment)
+          ClientSeeder::class, // doit être avant Campaign (référencé par Campaign)
+          CampaignSeeder::class, // doit être avant Task (référencé par Task)
+          TaskSeeder::class, // doit être avant Comment (référencé par Comment)
+          CommentSeeder::class, // dernier, dépend de Task et User  
+        ]);
 
         User::factory()->create([
             'name' => 'Test User',
