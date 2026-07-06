@@ -5,8 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Task;
-use app\Models\Campaign;
-use app\Models\User;
+use App\Models\Campaign;
+use App\Models\User;
 class TaskSeeder extends Seeder
 {
     /**

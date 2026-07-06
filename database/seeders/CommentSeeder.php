@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use app\Models\Comment;
-use app\Models\Task;
-use app\Models\user;
+use App\Models\Comment;
+use App\Models\Task;
+use App\Models\user;
 
 class CommentSeeder extends Seeder
 {

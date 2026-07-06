@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('date_debut');
             $table->date('date_fin');
             $table->text('objectifs')->nullable();
-            $table->enum('statut', ['active', 'en_pause', 'terminee'])->default('active');
+            $table->enum('statut', ['en_cours', 'termine', 'pause'])->default('en_cours');
             $table->timestamps();
         });
     }
