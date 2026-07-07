@@ -50,23 +50,33 @@ class CampaignController extends Controller
     }
 
     public function update(Request $request, string $id)
-    {
-        $campaign = Campaign::findOrFail($id);
+{
+    $campaign = Campaign::with('tasks')->findOrFail($id);
 
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'client_id' => 'required|exists:clients,id',
-            'date_debut' => 'required|date',
-            'date_fin' => 'required|date|after:date_debut',
-            'objectifs' => 'nullable|string',
-            'statut' => 'required|in:en_cours,termine,pause',
-        ]);
+    $request->validate([
+        'nom' => 'required|string|max:255',
+        'client_id' => 'required|exists:clients,id',
+        'date_debut' => 'required|date',
+        'date_fin' => 'required|date|after:date_debut',
+        'objectifs' => 'nullable|string',
+        'statut' => 'required|in:en_cours,termine,pause',
+    ]);
 
-        $campaign->update($request->all());
+    // Empêche de marquer "terminé" si des tâches ne sont pas terminées
+    if ($request->statut === 'termine') {
+        $tachesNonTerminees = $campaign->tasks->where('statut', '!=', 'termine')->count();
 
-        return redirect()->route('campaigns.index')->with('success', 'Campagne mise à jour !');
+        if ($tachesNonTerminees > 0) {
+            return back()
+                ->withInput()
+                ->withErrors(['statut' => "Impossible de terminer cette campagne : {$tachesNonTerminees} tâche(s) ne sont pas encore terminée(s)."]);
+        }
     }
 
+    $campaign->update($request->all());
+
+    return redirect()->route('campaigns.index')->with('success', 'Campagne mise à jour !');
+}
     public function destroy(string $id)
     {
         Campaign::findOrFail($id)->delete();
