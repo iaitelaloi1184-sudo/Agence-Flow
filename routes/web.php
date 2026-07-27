@@ -29,7 +29,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Tâches
     Route::resource('tasks', TaskController::class);
- 
+
+    Route::patch('/tasks/{task}/update-status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
+
 });
 
 require __DIR__.'/auth.php';
