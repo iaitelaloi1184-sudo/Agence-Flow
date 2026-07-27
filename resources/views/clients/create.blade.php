@@ -1,39 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Ajouter un client</title>
-</head>
-<body>
-    <h1>Ajouter un client</h1>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="text-xl font-semibold text-gray-800">Ajouter un client</h2>
+    </x-slot>
 
-    @if($errors->any())
-        <ul style="color:red">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
+    <div class="bg-white rounded-lg shadow p-6 max-w-2xl">
 
-    <form method="POST" action="{{ route('clients.store') }}">
-        @csrf
+        @if($errors->any())
+            <div class="bg-red-100 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">
+                <ul class="list-disc list-inside">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <label>Nom *</label><br>
-        <input type="text" name="nom" value="{{ old('nom') }}"><br><br>
+        <form action="{{ route('clients.store') }}" method="POST" class="space-y-4">
+            @csrf
 
-        <label>Email</label><br>
-        <input type="email" name="email" value="{{ old('email') }}"><br><br>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nom</label>
+                <input type="text" name="nom" value="{{ old('nom') }}"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
 
-        <label>Téléphone</label><br>
-        <input type="text" name="telephone" value="{{ old('telephone') }}"><br><br>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Secteur</label>
+                <input type="text" name="secteur" value="{{ old('secteur') }}"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
 
-        <label>Secteur</label><br>
-        <input type="text" name="secteur" value="{{ old('secteur') }}"><br><br>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" name="email" value="{{ old('email') }}"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
 
-        <label>Ton de communication</label><br>
-        <input type="text" name="ton_communication" value="{{ old('ton_communication') }}"><br><br>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                <input type="text" name="telephone" value="{{ old('telephone') }}"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
 
-        <button type="submit">Enregistrer</button>
-        <a href="{{ route('clients.index') }}">Annuler</a>
-    </form>
-</body>
-</html>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Ton de communication</label>
+                <input type="text" name="ton_communication" value="{{ old('ton_communication') }}"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+            </div>
+
+            <div class="flex gap-3 pt-2">
+                <button type="submit"
+                        class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700">
+                    Ajouter
+                </button>
+                <a href="{{ route('clients.index') }}"
+                   class="text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</x-app-layout>

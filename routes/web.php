@@ -6,6 +6,7 @@ use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DashboardController;
 
+
 // Page d'accueil → redirige vers login
 Route::get('/', function () {
     return redirect('/login');
@@ -18,14 +19,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    // Clients
+    // Clients — search AVANT resource
+    Route::get('/clients/search', [ClientController::class, 'search'])
+        ->name('clients.search');
     Route::resource('clients', ClientController::class);
 
-    // Campagnes8
+    // Campagnes
     Route::resource('campaigns', CampaignController::class);
 
     // Tâches
     Route::resource('tasks', TaskController::class);
-
+ 
 });
+
 require __DIR__.'/auth.php';
