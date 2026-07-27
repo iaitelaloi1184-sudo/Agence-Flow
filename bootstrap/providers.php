@@ -1,4 +1,4 @@
-lò<?php
+<?php
 
 use App\Providers\AppServiceProvider;
 
