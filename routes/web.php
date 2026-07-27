@@ -5,7 +5,6 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DashboardController;
-
 // Page d'accueil → redirige vers login
 Route::get('/', function () {
     return redirect('/login');

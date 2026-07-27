@@ -9,12 +9,20 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function index()
-    {
-        $tasks = Task::with(['campaign', 'user'])->get();
-        return view('tasks.index', compact('tasks'));
+    public function index(Request $request)
+{
+    $campaigns = Campaign::all();
+    $selectedCampaignId = $request->query('campaign_id');
+
+    $tasks = collect();
+    if ($selectedCampaignId) {
+        $tasks = Task::with(['campaign', 'user'])
+            ->where('campaign_id', $selectedCampaignId)
+            ->get();
     }
 
+    return view('tasks.index', compact('tasks', 'campaigns', 'selectedCampaignId'));
+}
     public function create()
     {
         $campaigns = Campaign::all();
