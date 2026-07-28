@@ -114,4 +114,21 @@ class TaskController extends Controller
 
         return response()->json(['success' => true]);
     }
+    public function addComment(Request $request, Task $task)
+    {
+        if (auth()->user()->role !== 'admin' && $task->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'contenu' => 'required|string|max:1000',
+        ]);
+
+        $task->comments()->create([
+            'user_id' => auth()->id(),
+            'contenu' => $request->contenu,
+        ]);
+
+        return back()->with('success', 'Commentaire ajouté !');
+    }
 }

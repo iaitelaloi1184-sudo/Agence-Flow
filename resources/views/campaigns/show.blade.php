@@ -47,8 +47,12 @@
                 <p class="text-sm text-gray-900">{{ $campaign->objectifs ?? 'Aucun objectif défini' }}</p>
             </div>
 
-            <div class="flex gap-2 pt-2">
-                <a href="{{ route('campaigns.edit', $campaign) }}"
+            <a href="{{ route('campaigns.pdf', $campaign) }}"
+   class="block w-full text-center border border-gray-200 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50 mb-2">
+    📄 Exporter en PDF
+</a>
+<div class="flex gap-2 pt-2">
+    <a href="{{ route('campaigns.edit', $campaign) }}"
                    class="flex-1 text-center border border-gray-200 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50">
                     Modifier
                 </a>

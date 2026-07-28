@@ -26,12 +26,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Campagnes
     Route::resource('campaigns', CampaignController::class);
+    Route::get('/campaigns/{campaign}/pdf', [CampaignController::class, 'exportPdf'])->name('campaigns.pdf');
 
     // Tâches
     Route::resource('tasks', TaskController::class);
 
     Route::patch('/tasks/{task}/update-status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
-
+    Route::post('/tasks/{task}/comments', [App\Http\Controllers\TaskController::class, 'addComment'])->name('tasks.comments.store');
 });
 
 require __DIR__.'/auth.php';

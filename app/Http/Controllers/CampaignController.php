@@ -84,4 +84,12 @@ class CampaignController extends Controller
         Campaign::findOrFail($id)->delete();
         return redirect()->route('campaigns.index')->with('success', 'Campagne supprimée !');
     }
+    public function exportPdf(string $id)
+    {
+        $campaign = Campaign::with(['client', 'tasks.user'])->findOrFail($id);
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('campaigns.pdf', compact('campaign'));
+
+        return $pdf->download('campagne-' . \Illuminate\Support\Str::slug($campaign->nom) . '.pdf');
+    }
 }
