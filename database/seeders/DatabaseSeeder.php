@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
           CampaignSeeder::class, // doit être avant Task (référencé par Task)
           TaskSeeder::class, // doit être avant Comment (référencé par Comment)
           CommentSeeder::class, 
+          RoleSeeder::class,
+          AssignRoleSeeder::class,
         ]);
 
         User::factory()->create([
