@@ -10,19 +10,26 @@ use Illuminate\Http\Request;
 class TaskController extends Controller
 {
     public function index(Request $request)
-{
-    $campaigns = Campaign::all();
-    $selectedCampaignId = $request->query('campaign_id');
+    {
+        $campaigns = Campaign::all();
+        $selectedCampaignId = $request->query('campaign_id');
 
-    $tasks = collect();
-    if ($selectedCampaignId) {
-        $tasks = Task::with(['campaign', 'user'])
-            ->where('campaign_id', $selectedCampaignId)
-            ->get();
+        $tasks = collect();
+        if ($selectedCampaignId) {
+            $query = Task::with(['campaign', 'user'])
+                ->where('campaign_id', $selectedCampaignId);
+
+            // Un employé ne voit que ses propres tâches
+            if (auth()->user()->role !== 'admin') {
+                $query->where('user_id', auth()->id());
+            }
+
+            $tasks = $query->get();
+        }
+
+        return view('tasks.index', compact('tasks', 'campaigns', 'selectedCampaignId'));
     }
 
-    return view('tasks.index', compact('tasks', 'campaigns', 'selectedCampaignId'));
-}
     public function create()
     {
         $campaigns = Campaign::all();
@@ -42,7 +49,8 @@ class TaskController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        Task::create($request->all());
+        $task = Task::create($request->all());
+        $task->user->notify(new \App\Notifications\TaskAssigned($task));
 
         return redirect()->route('tasks.index')->with('success', 'Tâche créée avec succès !');
     }
@@ -50,6 +58,11 @@ class TaskController extends Controller
     public function show(string $id)
     {
         $task = Task::with(['campaign', 'user', 'comments'])->findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $task->user_id !== auth()->id()) {
+            abort(403, 'Vous ne pouvez consulter que vos propres tâches.');
+        }
+
         return view('tasks.show', compact('task'));
     }
 
@@ -85,8 +98,14 @@ class TaskController extends Controller
         Task::findOrFail($id)->delete();
         return redirect()->route('tasks.index')->with('success', 'Tâche supprimée !');
     }
+
     public function updateStatus(Request $request, Task $task)
     {
+        // Un employé ne peut modifier que ses propres tâches
+        if (auth()->user()->role !== 'admin' && $task->user_id !== auth()->id()) {
+            abort(403, 'Vous ne pouvez modifier que vos propres tâches.');
+        }
+
         $request->validate([
             'statut' => 'required|in:a_faire,en_cours,en_revision,termine',
         ]);
@@ -94,5 +113,22 @@ class TaskController extends Controller
         $task->update(['statut' => $request->statut]);
 
         return response()->json(['success' => true]);
+    }
+    public function addComment(Request $request, Task $task)
+    {
+        if (auth()->user()->role !== 'admin' && $task->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'contenu' => 'required|string|max:1000',
+        ]);
+
+        $task->comments()->create([
+            'user_id' => auth()->id(),
+            'contenu' => $request->contenu,
+        ]);
+
+        return back()->with('success', 'Commentaire ajouté !');
     }
 }
