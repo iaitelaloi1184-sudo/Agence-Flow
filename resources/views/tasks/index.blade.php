@@ -25,12 +25,14 @@
                 @endforeach
             </select>
 
-            @if ($selectedCampaignId)
-                <a href="{{ route('tasks.create') }}?campaign_id={{ $selectedCampaignId }}"
-                   class="shrink-0 bg-gray-900 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                    + Nouvelle tâche
-                </a>
-            @endif
+            @role('admin')
+                @if ($selectedCampaignId)
+                    <a href="{{ route('tasks.create') }}?campaign_id={{ $selectedCampaignId }}"
+                       class="shrink-0 bg-gray-900 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                        + Nouvelle tâche
+                    </a>
+                @endif
+            @endrole
         </form>
     </div>
 

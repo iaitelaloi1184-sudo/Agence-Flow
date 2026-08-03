@@ -29,10 +29,12 @@
         </dl>
 
         <div class="flex gap-3 pt-4">
-            <a href="{{ route('clients.edit', $client) }}"
-               class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-600">
-                Modifier
-            </a>
+            @role('admin')
+                <a href="{{ route('clients.edit', $client) }}"
+                   class="bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-600">
+                    Modifier
+                </a>
+            @endrole
             <a href="{{ route('clients.index') }}"
                class="text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100">
                 Retour à la liste

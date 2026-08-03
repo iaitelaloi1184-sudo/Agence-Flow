@@ -23,6 +23,7 @@ class DashboardController extends Controller
 
         $taches_urgentes = Task::with(['campaign', 'user'])
             ->where('statut', '!=', 'termine')
+            ->where('priorite', '=', 'haute')
             ->orderBy('deadline')
             ->take(5)
             ->get();

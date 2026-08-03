@@ -20,9 +20,7 @@ class TaskController extends Controller
                 ->where('campaign_id', $selectedCampaignId);
 
             // Un employé ne voit que ses propres tâches
-            if (auth()->user()->role !== 'admin') {
-                $query->where('user_id', auth()->id());
-            }
+           
 
             $tasks = $query->get();
         }
@@ -59,9 +57,6 @@ class TaskController extends Controller
     {
         $task = Task::with(['campaign', 'user', 'comments'])->findOrFail($id);
 
-        if (auth()->user()->role !== 'admin' && $task->user_id !== auth()->id()) {
-            abort(403, 'Vous ne pouvez consulter que vos propres tâches.');
-        }
 
         return view('tasks.show', compact('task'));
     }
@@ -102,7 +97,7 @@ class TaskController extends Controller
     public function updateStatus(Request $request, Task $task)
     {
         // Un employé ne peut modifier que ses propres tâches
-        if (auth()->user()->role !== 'admin' && $task->user_id !== auth()->id()) {
+        if (!auth()->user()->is_admin && $task->user_id !== auth()->id()) {
             abort(403, 'Vous ne pouvez modifier que vos propres tâches.');
         }
 

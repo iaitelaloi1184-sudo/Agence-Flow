@@ -35,18 +35,22 @@
             </div>
 
             <div class="flex gap-2 pt-2">
-                <a href="{{ route('tasks.edit', $task) }}"
-                   class="flex-1 text-center border border-gray-200 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50">
-                    Modifier
-                </a>
-                <form method="POST" action="{{ route('tasks.destroy', $task) }}"
-                      onsubmit="return confirm('Supprimer cette tâche ?');" class="flex-1">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="w-full border border-red-200 text-red-600 text-sm font-medium py-2 rounded-lg hover:bg-red-50">
-                        Supprimer
-                    </button>
-                </form>
+                @role('admin')
+                    <a href="{{ route('tasks.edit', $task) }}"
+                       class="flex-1 text-center border border-gray-200 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50">
+                        Modifier
+                    </a>
+                @endrole
+                @role('admin')
+                    <form method="POST" action="{{ route('tasks.destroy', $task) }}"
+                          onsubmit="return confirm('Supprimer cette tâche ?');" class="flex-1">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full border border-red-200 text-red-600 text-sm font-medium py-2 rounded-lg hover:bg-red-50">
+                            Supprimer
+                        </button>
+                    </form>
+                @endrole
             </div>
         </div>
 
