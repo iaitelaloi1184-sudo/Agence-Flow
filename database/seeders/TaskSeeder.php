@@ -14,7 +14,7 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-    $campaign = Campaign::first();
+        $campaign = Campaign::first();
         $employe = User::where('role', 'employe')->first();
 
         Task::create([

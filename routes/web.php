@@ -6,25 +6,39 @@ use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DashboardController;
 
-// Page d'accueil → redirige vers login
 Route::get('/', function () {
     return redirect('/login');
 });
 
-// Routes protégées (uniquement connectés)
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Clients
-    Route::resource('clients', ClientController::class);
+    // ---- Gestion complète : réservée aux admins ----
+    Route::middleware(['role:admin'])->group(function () {
+        Route::resource('clients', ClientController::class)->except(['index', 'show']);
+        Route::resource('campaigns', CampaignController::class)->except(['index', 'show']);
+        Route::resource('tasks', TaskController::class)->except(['index', 'show']);
+    });
 
-    // Campagnes8
-    Route::resource('campaigns', CampaignController::class);
+    // ---- Lecture : accessible à tous les utilisateurs connectés (admin + employé) ----
 
-    // Tâches
-    Route::resource('tasks', TaskController::class);
+    Route::get('/clients/search', [ClientController::class, 'search'])->name('clients.search');
+    Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+    Route::get('/clients/{client}', [ClientController::class, 'show'])->name('clients.show');
 
+    Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
+    Route::get('/campaigns/{campaign}', [CampaignController::class, 'show'])->name('campaigns.show');
+    Route::get('/campaigns/{campaign}/pdf', [CampaignController::class, 'exportPdf'])->name('campaigns.pdf');
+
+    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+    Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
+
+    // Actions employé : mise à jour du statut (sur SES tâches) + commentaires
+    Route::patch('/tasks/{task}/update-status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
+    Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('tasks.comments.store');
+
+    
 });
+
+require __DIR__.'/auth.php';

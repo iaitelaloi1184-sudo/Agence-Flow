@@ -20,7 +20,9 @@ class DatabaseSeeder extends Seeder
           ClientSeeder::class, // doit être avant Campaign (référencé par Campaign)
           CampaignSeeder::class, // doit être avant Task (référencé par Task)
           TaskSeeder::class, // doit être avant Comment (référencé par Comment)
-          CommentSeeder::class, // dernier, dépend de Task et User  
+          CommentSeeder::class, 
+          RoleSeeder::class,
+          AssignRoleSeeder::class,
         ]);
 
         User::factory()->create([
