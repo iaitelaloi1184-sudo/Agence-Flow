@@ -52,26 +52,32 @@
     📄 Exporter en PDF
 </a>
 <div class="flex gap-2 pt-2">
-    <a href="{{ route('campaigns.edit', $campaign) }}"
-                   class="flex-1 text-center border border-gray-200 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50">
-                    Modifier
-                </a>
-                <form method="POST" action="{{ route('campaigns.destroy', $campaign) }}"
-                      onsubmit="return confirm('Supprimer cette campagne ?');" class="flex-1">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="w-full border border-red-200 text-red-600 text-sm font-medium py-2 rounded-lg hover:bg-red-50">
-                        Supprimer
-                    </button>
-                </form>
-            </div>
+    @role('admin')
+        <a href="{{ route('campaigns.edit', $campaign) }}"
+           class="flex-1 text-center border border-gray-200 text-gray-700 text-sm font-medium py-2 rounded-lg hover:bg-gray-50">
+            Modifier
+        </a>
+    @endrole
+    @role('admin')
+        <form method="POST" action="{{ route('campaigns.destroy', $campaign) }}"
+              onsubmit="return confirm('Supprimer cette campagne ?');" class="flex-1">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="w-full border border-red-200 text-red-600 text-sm font-medium py-2 rounded-lg hover:bg-red-50">
+                Supprimer
+            </button>
+        </form>
+    @endrole
+</div>
         </div>
 
         {{-- Tâches liées --}}
         <div class="lg:col-span-2 bg-white rounded-xl border border-gray-100 p-6">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-sm font-semibold text-gray-900">Tâches liées ({{ $campaign->tasks->count() }})</h3>
-                <a href="{{ route('tasks.create') }}" class="text-sm text-red-600 hover:underline">+ Ajouter une tâche</a>
+                @role('admin')
+                    <a href="{{ route('tasks.create') }}" class="text-sm text-red-600 hover:underline">+ Ajouter une tâche</a>
+                @endrole
             </div>
 
             <div class="space-y-3">

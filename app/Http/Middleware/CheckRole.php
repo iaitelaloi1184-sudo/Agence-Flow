@@ -6,17 +6,17 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminMiddleware
+class CheckRole
 {
     /**
      * Handle an incoming request.
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next , string $role): Response
     {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Accès réservé aux administrateurs.');
+        if (!$request->user() || !$request->user()->hasRole($role)) {
+            abort(403, 'Accès refusé. Vous n\'avez pas le rôle requis pour accéder à cette ressource.');
         }
 
         return $next($request);

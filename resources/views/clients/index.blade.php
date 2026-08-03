@@ -6,10 +6,12 @@
     <div class="bg-white rounded-lg shadow p-6">
 
         <div class="flex justify-between items-center mb-6">
-            <a href="{{ route('clients.create') }}"
-               class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700">
-                + Ajouter un client
-            </a>
+            @role('admin')
+                <a href="{{ route('clients.create') }}"
+                   class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700">
+                    + Ajouter un client
+                </a>
+            @endrole
 
             <div class="relative">
                 <input type="text" id="searchInput"

@@ -27,10 +27,12 @@
             <input type="text" x-model="search" placeholder="Rechercher une campagne ou un client..."
                 class="w-full max-w-xs px-4 py-2 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600">
 
-            <a href="{{ route('campaigns.create') }}"
-               class="shrink-0 bg-gray-900 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                + Nouvelle campagne
-            </a>
+            @role('admin')
+                <a href="{{ route('campaigns.create') }}"
+                   class="shrink-0 bg-gray-900 hover:bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                    + Nouvelle campagne
+                </a>
+            @endrole
         </div>
 
         <p class="text-sm text-gray-500" x-text="campaigns.filter(c => c.nom.toLowerCase().includes(search.toLowerCase()) || c.client.toLowerCase().includes(search.toLowerCase())).length + ' campagne(s)'"></p>
