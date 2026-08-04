@@ -67,12 +67,24 @@
                             {{ substr($comment->user->name ?? '?', 0, 1) }}
                         </div>
                         <div class="flex-1">
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm font-medium text-gray-900">{{ $comment->user->name ?? 'Utilisateur' }}</span>
-                                <span class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
-                            </div>
-                            <p class="text-sm text-gray-700 mt-0.5">{{ $comment->contenu }}</p>
-                        </div>
+    <div class="flex items-center gap-2 justify-between">
+        <div class="flex items-center gap-2">
+            <span class="text-sm font-medium text-gray-900">{{ $comment->user->name ?? 'Utilisateur' }}</span>
+            <span class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
+        </div>
+        @if($comment->user_id == auth()->id())
+            <form method="POST" action="{{ route('tasks.comments.destroy', [$task, $comment]) }}"
+                  onsubmit="return confirm('Supprimer ce commentaire ?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-xs text-gray-400 hover:text-red-600">
+                    Supprimer
+                </button>
+            </form>
+        @endif
+    </div>
+    <p class="text-sm text-gray-700 mt-0.5">{{ $comment->contenu }}</p>
+</div>
                     </div>
                 @empty
                     <p class="text-sm text-gray-400 text-center py-4">Aucun commentaire pour le moment</p>

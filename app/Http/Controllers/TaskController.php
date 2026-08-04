@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\Campaign;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Comment;
 
 class TaskController extends Controller
 {
@@ -126,4 +127,16 @@ class TaskController extends Controller
 
         return back()->with('success', 'Commentaire ajouté !');
     }
+
+
+    public function destroyComment(Task $task, Comment $comment)
+{
+    if ($comment->user_id !== auth()->id()) {
+        abort(403, 'Vous ne pouvez supprimer que vos propres commentaires.');
+    }
+
+    $comment->delete();
+
+    return back()->with('success', 'Commentaire supprimé !');
+}
 }
