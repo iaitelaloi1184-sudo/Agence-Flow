@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     // Actions employé : mise à jour du statut (sur SES tâches) + commentaires
     Route::patch('/tasks/{task}/update-status', [TaskController::class, 'updateStatus'])->name('tasks.updateStatus');
     Route::post('/tasks/{task}/comments', [TaskController::class, 'addComment'])->name('tasks.comments.store');
+    Route::delete('/tasks/{task}/comments/{comment}', [TaskController::class, 'destroyComment'])->name('tasks.comments.destroy');
 
     
 });
