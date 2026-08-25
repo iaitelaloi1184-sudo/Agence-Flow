@@ -96,23 +96,23 @@ class TaskController extends Controller
     }
 
     public function updateStatus(Request $request, Task $task)
-    {
-        // Un employé ne peut modifier que ses propres tâches
-        if (!auth()->user()->is_admin && $task->user_id !== auth()->id()) {
-            abort(403, 'Vous ne pouvez modifier que vos propres tâches.');
-        }
-
-        $request->validate([
-            'statut' => 'required|in:a_faire,en_cours,en_revision,termine',
-        ]);
-
-        $task->update(['statut' => $request->statut]);
-
-        return response()->json(['success' => true]);
+{
+    // Un employé ne peut modifier que ses propres tâches
+    if (!auth()->user()->hasRole('admin') && $task->user_id !== auth()->id()) {
+        abort(403, 'Vous ne pouvez modifier que vos propres tâches.');
     }
+
+    $request->validate([
+        'statut' => 'required|in:a_faire,en_cours,en_revision,termine',
+    ]);
+
+    $task->update(['statut' => $request->statut]);
+
+    return response()->json(['success' => true]);
+}
     public function addComment(Request $request, Task $task)
     {
-        if (auth()->user()->role !== 'admin' && $task->user_id !== auth()->id()) {
+        if (!auth()->user()->hasRole('admin') && $task->user_id !== auth()->id()) {
             abort(403);
         }
 
@@ -131,7 +131,7 @@ class TaskController extends Controller
 
     public function destroyComment(Task $task, Comment $comment)
 {
-    if ($comment->user_id !== auth()->id()) {
+    if (!auth()->user()->hasRole('admin') && $comment->user_id !== auth()->id()) {
         abort(403, 'Vous ne pouvez supprimer que vos propres commentaires.');
     }
 

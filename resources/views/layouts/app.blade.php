@@ -65,6 +65,12 @@
     class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('tasks.*') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-800' }}">
     Tâches
 </a>
+@role('admin')
+    <a href="{{ route('employees.index') }}"
+        class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium {{ request()->routeIs('employees.*') ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-800' }}">
+        Employés
+    </a>
+@endrole
 
                 </nav>
 

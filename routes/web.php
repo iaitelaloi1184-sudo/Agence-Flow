@@ -5,10 +5,22 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\PasswordSetupController;
+
+
+Route::get('/password/setup/{user}', [PasswordSetupController::class, 'show'])
+    ->name('password.setup')
+    ->middleware('signed');
+
+Route::post('/password/setup/{user}', [PasswordSetupController::class, 'store'])
+    ->name('password.setup.store');
+
 
 Route::get('/', function () {
     return redirect('/login');
 });
+
 
 Route::middleware(['auth'])->group(function () {
 
@@ -19,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('clients', ClientController::class)->except(['index', 'show']);
         Route::resource('campaigns', CampaignController::class)->except(['index', 'show']);
         Route::resource('tasks', TaskController::class)->except(['index', 'show']);
+        Route::resource('employees', EmployeeController::class);
     });
 
     // ---- Lecture : accessible à tous les utilisateurs connectés (admin + employé) ----
