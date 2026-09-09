@@ -131,12 +131,13 @@ class TaskController extends Controller
 
     public function destroyComment(Task $task, Comment $comment)
 {
-    if (!auth()->user()->hasRole('admin') && $comment->user_id !== auth()->id()) {
+    // Chacun ne peut supprimer que ses propres commentaires, y compris l'administrateur
+    if ($comment->user_id !== auth()->id()) {
         abort(403, 'Vous ne pouvez supprimer que vos propres commentaires.');
     }
-
+ 
     $comment->delete();
-
+ 
     return back()->with('success', 'Commentaire supprimé !');
 }
 }
